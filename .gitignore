@@ -1,0 +1,10 @@
+*.pt
+*.pth
+*.onnx
+*.pkl
+*.pickle
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.pyc
