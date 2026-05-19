@@ -2,6 +2,7 @@ from ultralytics import YOLO
 import sys
 import supervision as sv
 import numpy as np
+import pandas as pd
 
 sys.path.append('./')
 from utills.stubs_utils import ReadSub,Write_sub
@@ -55,12 +56,19 @@ class BallTracker:
                 continue
             last_good_box=ball_position[last_good_frame_index].get(1,{}).get('box',[])
             frame_gap=i-last_good_frame_index
-            adjusted_max_distance=max_allowed_distance+frame_gap
+            adjusted_max_distance=max_allowed_distance*frame_gap
             # Calculate the distanec between the last good bbx and current position
             if np.linalg.norm(np.array(last_good_box[:2])-np.array(current_box[:2]))>adjusted_max_distance:
                 ball_position[i]={}
-                
-
-
-
-
+            else:
+                last_good_frame_index=i
+        return ball_position
+    def interpolate_ball_position(self,ball_position):
+        ball_position=[x.get(1,{}).get('box',[]) for x in ball_position]
+        dataFrameBallPosition=pd.DataFrame(ball_position,columns=['x1','y1','x2','y2'])
+        # Interpolation function : is used to interpolate the missing values 
+        dataFrameBallPosition=dataFrameBallPosition.interpolate()
+        dataFrameBallPosition=dataFrameBallPosition.bfill()
+        ball_position=[{1:{'box':x}} for x in dataFrameBallPosition.to_numpy().tolist()]
+        return ball_position
+    
