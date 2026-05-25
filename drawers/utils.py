@@ -1,12 +1,8 @@
 import cv2
 import sys
 import numpy as np
-
-
 sys.path.append('./')
 from utills.bbox_utils import get_bbox_width,get_center_of_bbox
-
-
 
 def drawTriangle(frame, bbox, color):
     y = int(bbox[1])
@@ -42,7 +38,7 @@ def drawElips(frame, bbox, color, trackID=None):
         angle=0,
         startAngle=-45,
         endAngle=235,
-        color=(0, 0, 255), # Green ellipse
+        color=color, 
         thickness=2
     )
 
@@ -50,7 +46,6 @@ def drawElips(frame, bbox, color, trackID=None):
     if trackID is not None:
         rec_width = 40
         rec_height = 20
-        
         x1_rec = x_center - rec_width // 2
         x2_rec = x_center + rec_width // 2  # Fixed: changed from - to +
         y1_rec = y2 - rec_height // 2
